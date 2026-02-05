@@ -1,0 +1,273 @@
+{
+  "updatedAt": "2026-01-21T21:36:32.893Z",
+  "createdAt": "2026-01-21T20:35:24.604Z",
+  "id": "D5QePe7c6RdZdq9Da2BTr",
+  "name": "MensgemProspecWPP",
+  "description": null,
+  "active": false,
+  "isArchived": false,
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [0, 0],
+      "id": "008ab774-7211-4f1f-9de0-5451d3a7aa49",
+      "name": "When clicking ‘Execute workflow’"
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "SELECT * FROM prospec\nWHERE is_prospec = FALSE\nLIMIT 1;",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [256, 0],
+      "id": "58615374-6bd8-4145-8a20-9422ae8a591e",
+      "name": "Execute a SQL query",
+      "credentials": {
+        "postgres": { "id": "8wIX0b1vnxNGa8ih", "name": "Postgres account" }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "messages-api",
+        "instanceName": "teste",
+        "remoteJid": "={{ $json.phone }}",
+        "messageText": "=Olá {{ $json.name }} somos da Cravus",
+        "options_message": {}
+      },
+      "type": "n8n-nodes-evolution-api.evolutionApi",
+      "typeVersion": 1,
+      "position": [544, 0],
+      "id": "30afe766-7235-4794-ab76-7e41267c01cf",
+      "name": "Enviar texto",
+      "credentials": {
+        "evolutionApi": {
+          "id": "c709FFngRfGiEaC6",
+          "name": "Evolution account"
+        }
+      }
+    },
+    {
+      "parameters": { "amount": 3 },
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [752, 48],
+      "id": "5294e557-e841-4ff1-94a8-39338ae5b719",
+      "name": "Wait",
+      "webhookId": "15f354ae-5dbf-40e8-9321-661fbd36e2f4"
+    },
+    {
+      "parameters": { "options": {} },
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [1168, 80],
+      "id": "e8b2ac2d-e2c6-4fe2-a01b-6c0c6771ac0e",
+      "name": "Loop Over Items",
+      "executeOnce": false
+    },
+    {
+      "parameters": { "amount": 2 },
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [1216, 288],
+      "id": "4353bcb6-4731-4017-b791-33d4161d3650",
+      "name": "Wait1",
+      "webhookId": "58daf39e-c5b3-4ea5-a4ee-eae6ceecfdc2"
+    },
+    {
+      "parameters": {
+        "resource": "messages-api",
+        "operation": "send-image",
+        "instanceName": "teste",
+        "remoteJid": "={{ $('Execute a SQL query').item.json.phone }}",
+        "media": "={{ $json.imageUrl }}",
+        "options_message": {}
+      },
+      "type": "n8n-nodes-evolution-api.evolutionApi",
+      "typeVersion": 1,
+      "position": [1216, 496],
+      "id": "4cf12aff-3b70-43af-a758-01221158175c",
+      "name": "Enviar imagem",
+      "credentials": {
+        "evolutionApi": {
+          "id": "c709FFngRfGiEaC6",
+          "name": "Evolution account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "## Loop envio de imagens\n",
+        "height": 848,
+        "width": 368,
+        "color": 5
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [1072, -128],
+      "id": "22287a67-9f65-43bc-8b3e-afe4cb0ab5b5",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "jsCode": "return [\n  { json: { imageUrl: \"https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Flookaside.fbsbx.com%2Flookaside%2Fcrawler%2Fmedia%2F%3Fmedia_id%3D2355983897939555&f=1&nofb=1&ipt=ee31a51c00eb8ac971730f4ca5af149e50d27beba6e772bb3002b81d45314b42\" }},\n  { json: { imageUrl: \"https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Flookaside.fbsbx.com%2Flookaside%2Fcrawler%2Fmedia%2F%3Fmedia_id%3D2355983897939555&f=1&nofb=1&ipt=ee31a51c00eb8ac971730f4ca5af149e50d27beba6e772bb3002b81d45314b42\" } },\n  { json: { imageUrl: \"https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Flookaside.fbsbx.com%2Flookaside%2Fcrawler%2Fmedia%2F%3Fmedia_id%3D2355983897939555&f=1&nofb=1&ipt=ee31a51c00eb8ac971730f4ca5af149e50d27beba6e772bb3002b81d45314b42\" } },\n  \n];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [960, 80],
+      "id": "d2c132a5-f790-489d-9687-0a422d07b800",
+      "name": "URL imagens"
+    },
+    {
+      "parameters": { "amount": 2 },
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [1664, 64],
+      "id": "73d941a3-6097-4588-995b-e76a5b7e9f1a",
+      "name": "Wait2",
+      "webhookId": "7b16e772-9bdd-48e5-9fb2-e9bae35f06de"
+    },
+    {
+      "parameters": {
+        "resource": "messages-api",
+        "instanceName": "teste",
+        "remoteJid": "={{ $('Code in JavaScript').item.json.phone }}",
+        "messageText": "Acesse nosso site: https://dw203f29yson7.cloudfront.net/\nAcesse nosos instagram: https://www.instagram.com/cravus.modas\n\nCaso tenha interesse entre em contato com um de nossos vendedores\n\n\n",
+        "options_message": {}
+      },
+      "type": "n8n-nodes-evolution-api.evolutionApi",
+      "typeVersion": 1,
+      "position": [1840, 64],
+      "id": "4e664031-4104-4110-b74c-fd4967b456d0",
+      "name": "Enviar texto1",
+      "credentials": {
+        "evolutionApi": {
+          "id": "c709FFngRfGiEaC6",
+          "name": "Evolution account"
+        }
+      }
+    },
+    {
+      "parameters": { "amount": 2 },
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [2000, 64],
+      "id": "8f07b16d-7533-4524-8b0a-ed98d6248065",
+      "name": "Wait3",
+      "webhookId": "7b16e772-9bdd-48e5-9fb2-e9bae35f06de"
+    },
+    {
+      "parameters": {
+        "resource": "messages-api",
+        "operation": "send-contact",
+        "instanceName": "teste",
+        "remoteJid": "={{ $('Code in JavaScript').item.json.phone }}",
+        "contacts": {
+          "contactValues": [
+            {
+              "fullName": "Rildo Sanchez",
+              "wuid": "5543998060400",
+              "phoneNumber": "(43) 99806-0400",
+              "organization": "Cravus",
+              "email": "rildo@usa.com",
+              "url": "https://dw203f29yson7.cloudfront.net/"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-evolution-api.evolutionApi",
+      "typeVersion": 1,
+      "position": [2160, 64],
+      "id": "930ee701-6dd9-425c-8587-443646a4a0d5",
+      "name": "Enviar contato",
+      "credentials": {
+        "evolutionApi": {
+          "id": "c709FFngRfGiEaC6",
+          "name": "Evolution account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "\nreturn [{json:{\n  phone: $('Execute a SQL query').first().json.phone,\n  name: $('Execute a SQL query').first().json.name\n}}]"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1504, 64],
+      "id": "b6d6f266-415d-407d-8a8c-5e1083a2a6c1",
+      "name": "Code in JavaScript"
+    }
+  ],
+  "connections": {
+    "When clicking ‘Execute workflow’": {
+      "main": [[{ "node": "Execute a SQL query", "type": "main", "index": 0 }]]
+    },
+    "Execute a SQL query": {
+      "main": [[{ "node": "Enviar texto", "type": "main", "index": 0 }]]
+    },
+    "Enviar texto": {
+      "main": [[{ "node": "Wait", "type": "main", "index": 0 }]]
+    },
+    "Wait": {
+      "main": [[{ "node": "URL imagens", "type": "main", "index": 0 }]]
+    },
+    "Loop Over Items": {
+      "main": [
+        [{ "node": "Code in JavaScript", "type": "main", "index": 0 }],
+        [{ "node": "Wait1", "type": "main", "index": 0 }]
+      ]
+    },
+    "Wait1": {
+      "main": [[{ "node": "Enviar imagem", "type": "main", "index": 0 }]]
+    },
+    "URL imagens": {
+      "main": [[{ "node": "Loop Over Items", "type": "main", "index": 0 }]]
+    },
+    "Wait2": {
+      "main": [[{ "node": "Enviar texto1", "type": "main", "index": 0 }]]
+    },
+    "Enviar texto1": {
+      "main": [[{ "node": "Wait3", "type": "main", "index": 0 }]]
+    },
+    "Wait3": {
+      "main": [[{ "node": "Enviar contato", "type": "main", "index": 0 }]]
+    },
+    "Enviar imagem": {
+      "main": [[{ "node": "Loop Over Items", "type": "main", "index": 0 }]]
+    },
+    "Code in JavaScript": {
+      "main": [[{ "node": "Wait2", "type": "main", "index": 0 }]]
+    }
+  },
+  "settings": { "executionOrder": "v1", "availableInMCP": false },
+  "staticData": null,
+  "meta": { "templateCredsSetupCompleted": true },
+  "pinData": {},
+  "versionId": "8205b9df-3978-4b10-a305-792055bedbec",
+  "activeVersionId": null,
+  "versionCounter": 12,
+  "triggerCount": 0,
+  "tags": [],
+  "shared": [
+    {
+      "updatedAt": "2026-01-21T20:35:24.609Z",
+      "createdAt": "2026-01-21T20:35:24.609Z",
+      "role": "workflow:owner",
+      "workflowId": "D5QePe7c6RdZdq9Da2BTr",
+      "projectId": "R7Se8yMq6BFGiCWH",
+      "project": {
+        "updatedAt": "2026-01-21T20:35:04.514Z",
+        "createdAt": "2026-01-21T20:34:19.625Z",
+        "id": "R7Se8yMq6BFGiCWH",
+        "name": "pedro sanchez <pedrob4747@gmail.com>",
+        "type": "personal",
+        "icon": null,
+        "description": null,
+        "creatorId": "a31c302f-dd30-46ae-8208-29e86b4fdbc0"
+      }
+    }
+  ]
+}
