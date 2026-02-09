@@ -1,0 +1,551 @@
+{
+  "name": "MensgemProspecWPP",
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        -1072,
+        128
+      ],
+      "id": "173c197a-a6a8-479e-af23-65fd23fad47b",
+      "name": "When clicking ‘Execute workflow’"
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "SELECT * FROM prospec\nWHERE isprospec = FALSE\nLIMIT 1;",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        -608,
+        128
+      ],
+      "id": "68eacb39-f38a-48ba-9ee6-3dee22fda15f",
+      "name": "Execute a SQL query",
+      "credentials": {
+        "postgres": {
+          "id": "Lfl8ucpji76SeehY",
+          "name": "Postgres account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "messages-api",
+        "instanceName": "={{ $('Edit Fields').item.json.instanceName }}",
+        "remoteJid": "={{ $json.phone }}",
+        "messageText": "=Olá {{ $json.name }} somos da Cravus",
+        "options_message": {}
+      },
+      "type": "n8n-nodes-evolution-api.evolutionApi",
+      "typeVersion": 1,
+      "position": [
+        -320,
+        128
+      ],
+      "id": "4359bfa8-11ae-4e38-84a6-15761b44d16a",
+      "name": "Enviar texto",
+      "credentials": {
+        "evolutionApi": {
+          "id": "HHeKEu7GAHmsxCan",
+          "name": "Evolution account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "amount": 3
+      },
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        -112,
+        176
+      ],
+      "id": "9216ea54-ffe7-48ca-be6f-05c2a4b30dc6",
+      "name": "Wait",
+      "webhookId": "15f354ae-5dbf-40e8-9321-661fbd36e2f4"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        304,
+        208
+      ],
+      "id": "440d05e2-d27a-4836-8e61-6db401a5bea0",
+      "name": "Loop Over Items",
+      "executeOnce": false
+    },
+    {
+      "parameters": {
+        "amount": 0.5
+      },
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        352,
+        416
+      ],
+      "id": "20e07eb0-45de-4290-a41a-f2dcc3e40815",
+      "name": "Wait1",
+      "webhookId": "58daf39e-c5b3-4ea5-a4ee-eae6ceecfdc2"
+    },
+    {
+      "parameters": {
+        "resource": "messages-api",
+        "operation": "send-image",
+        "instanceName": "={{ $('Edit Fields').item.json.instanceName }}",
+        "remoteJid": "={{ $('Execute a SQL query').item.json.phone }}",
+        "media": "={{ $json.imageUrl }}",
+        "options_message": {}
+      },
+      "type": "n8n-nodes-evolution-api.evolutionApi",
+      "typeVersion": 1,
+      "position": [
+        352,
+        624
+      ],
+      "id": "9d675556-d402-4350-850a-b6fd15394e38",
+      "name": "Enviar imagem",
+      "credentials": {
+        "evolutionApi": {
+          "id": "HHeKEu7GAHmsxCan",
+          "name": "Evolution account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "## Loop envio de imagens\n",
+        "height": 816,
+        "width": 368,
+        "color": 5
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        208,
+        32
+      ],
+      "id": "14524c09-3411-4731-9167-c411e7ed50cd",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "jsCode": "return [\n  { json: { imageUrl: \"https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Flookaside.fbsbx.com%2Flookaside%2Fcrawler%2Fmedia%2F%3Fmedia_id%3D2355983897939555&f=1&nofb=1&ipt=ee31a51c00eb8ac971730f4ca5af149e50d27beba6e772bb3002b81d45314b42\" }},\n  { json: { imageUrl: \"https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Flookaside.fbsbx.com%2Flookaside%2Fcrawler%2Fmedia%2F%3Fmedia_id%3D2355983897939555&f=1&nofb=1&ipt=ee31a51c00eb8ac971730f4ca5af149e50d27beba6e772bb3002b81d45314b42\" } },\n  { json: { imageUrl: \"https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Flookaside.fbsbx.com%2Flookaside%2Fcrawler%2Fmedia%2F%3Fmedia_id%3D2355983897939555&f=1&nofb=1&ipt=ee31a51c00eb8ac971730f4ca5af149e50d27beba6e772bb3002b81d45314b42\" } },\n  \n];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        96,
+        208
+      ],
+      "id": "c830efc6-e316-4f62-9d0c-f2ef54bb54dc",
+      "name": "URL imagens"
+    },
+    {
+      "parameters": {
+        "amount": 1
+      },
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        800,
+        192
+      ],
+      "id": "6e731c28-26ee-4a9c-9bf4-dbe6eb0f95ba",
+      "name": "Wait2",
+      "webhookId": "7b16e772-9bdd-48e5-9fb2-e9bae35f06de"
+    },
+    {
+      "parameters": {
+        "resource": "messages-api",
+        "instanceName": "={{ $('Code in JavaScript').first().json.instanceName }}",
+        "remoteJid": "={{ $('Code in JavaScript').item.json.phone }}",
+        "messageText": "Acesse nosso site: https://dw203f29yson7.cloudfront.net/\nAcesse nosos instagram: https://www.instagram.com/cravus.modas\n\nCaso tenha interesse entre em contato com um de nossos vendedores\n\n\n",
+        "options_message": {}
+      },
+      "type": "n8n-nodes-evolution-api.evolutionApi",
+      "typeVersion": 1,
+      "position": [
+        976,
+        192
+      ],
+      "id": "aea86ffb-0669-4fbe-a165-5c83ed1251c3",
+      "name": "Enviar texto1",
+      "credentials": {
+        "evolutionApi": {
+          "id": "HHeKEu7GAHmsxCan",
+          "name": "Evolution account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "amount": 1
+      },
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        1136,
+        192
+      ],
+      "id": "9516fcf7-4295-43c1-a9d1-a3bc0c853206",
+      "name": "Wait3",
+      "webhookId": "7b16e772-9bdd-48e5-9fb2-e9bae35f06de"
+    },
+    {
+      "parameters": {
+        "resource": "messages-api",
+        "operation": "send-contact",
+        "instanceName": "={{ $('Code in JavaScript').item.json.instanceName }}",
+        "remoteJid": "={{ $('Code in JavaScript').item.json.phone }}",
+        "contacts": {
+          "contactValues": [
+            {
+              "fullName": "Rildo Sanchez",
+              "wuid": "5543998060400",
+              "phoneNumber": "(43) 99806-0400",
+              "organization": "Cravus",
+              "email": "rildo@usa.com",
+              "url": "https://dw203f29yson7.cloudfront.net/"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-evolution-api.evolutionApi",
+      "typeVersion": 1,
+      "position": [
+        1296,
+        192
+      ],
+      "id": "8b09bd14-782b-46be-b39c-88e80bfaa0c2",
+      "name": "Enviar contato",
+      "credentials": {
+        "evolutionApi": {
+          "id": "HHeKEu7GAHmsxCan",
+          "name": "Evolution account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "\nreturn [{json:{\n  phone: $('Execute a SQL query').first().json.phone,\n  name: $('Execute a SQL query').first().json.name,\n  instanceName: $('Edit Fields').first().json.instanceName\n}}]"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        640,
+        192
+      ],
+      "id": "f3970318-c159-4fc7-93a8-f6b6b56af00a",
+      "name": "Code in JavaScript"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "81cd0061-729c-4505-9721-525f7efdfb7b",
+              "name": "instanceName",
+              "value": "ProspecPedro",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -864,
+        128
+      ],
+      "id": "b8a4eb9e-e1a5-4c75-95e4-646cde149cab",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "schema": {
+          "__rl": true,
+          "mode": "list",
+          "value": "public"
+        },
+        "table": {
+          "__rl": true,
+          "value": "prospec",
+          "mode": "list",
+          "cachedResultName": "prospec"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "isprospec": true,
+            "phone": "={{ $('Code in JavaScript').item.json.phone }}"
+          },
+          "matchingColumns": [
+            "phone"
+          ],
+          "schema": [
+            {
+              "id": "id",
+              "displayName": "id",
+              "required": false,
+              "defaultMatch": true,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "create_time",
+              "displayName": "create_time",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "dateTime",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "name",
+              "displayName": "name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "phone",
+              "displayName": "phone",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "isprospec",
+              "displayName": "isprospec",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "boolean",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        1504,
+        192
+      ],
+      "id": "374dae94-2df8-43b2-8d06-88ea2ee6f168",
+      "name": "Update rows in a table",
+      "credentials": {
+        "postgres": {
+          "id": "Lfl8ucpji76SeehY",
+          "name": "Postgres account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Execute a SQL query",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Execute a SQL query": {
+      "main": [
+        [
+          {
+            "node": "Enviar texto",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Enviar texto": {
+      "main": [
+        [
+          {
+            "node": "Wait",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait": {
+      "main": [
+        [
+          {
+            "node": "URL imagens",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Loop Over Items": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Wait1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait1": {
+      "main": [
+        [
+          {
+            "node": "Enviar imagem",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "URL imagens": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait2": {
+      "main": [
+        [
+          {
+            "node": "Enviar texto1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Enviar texto1": {
+      "main": [
+        [
+          {
+            "node": "Wait3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait3": {
+      "main": [
+        [
+          {
+            "node": "Enviar contato",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Enviar imagem": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript": {
+      "main": [
+        [
+          {
+            "node": "Wait2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "Execute a SQL query",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Enviar contato": {
+      "main": [
+        [
+          {
+            "node": "Update rows in a table",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "availableInMCP": false
+  },
+  "versionId": "699d4894-a7d0-4af8-8cb3-7388e8895ff7",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "b3ca2ee63feb1580cd641897b18d69a10649581950775237e01e6d57e5525b4d"
+  },
+  "id": "udfx_4eqCKe4PXmM_CWPS",
+  "tags": []
+}

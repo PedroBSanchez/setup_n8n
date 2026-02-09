@@ -4,4 +4,5 @@
 evolution/
 n8n/
 
-
+postgres-data
+postgres-data/
