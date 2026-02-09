@@ -36,7 +36,7 @@ services:
     restart: unless-stopped
     
   evolution-api:
-    image: atendai/evolution-api
+    image: evoapicloud/evolution-api:v2.3.6
     container_name: evolution-api
     ports:
       - "8080:8080"
